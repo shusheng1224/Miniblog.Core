@@ -11,9 +11,17 @@ using Miniblog.Core.Services;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+/// <summary>
+/// 账户相关控制器，处理登录与注销。
+/// </summary>
 [Authorize]
 public class AccountController(IUserServices userServices) : Controller
 {
+    /// <summary>
+    /// 显示登录页面。
+    /// </summary>
+    /// <param name="returnUrl">登录后返回的地址</param>
+    /// <returns>登录视图</returns>
     [Route("/login")]
     [AllowAnonymous]
     [HttpGet]
@@ -23,6 +31,12 @@ public class AccountController(IUserServices userServices) : Controller
         return this.View();
     }
 
+    /// <summary>
+    /// 处理登录请求。
+    /// </summary>
+    /// <param name="returnUrl">登录后返回的地址</param>
+    /// <param name="model">登录视图模型</param>
+    /// <returns>重定向或登录视图</returns>
     [Route("/login")]
     [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
     public async Task<IActionResult> LoginAsync(string? returnUrl, LoginViewModel? model)
@@ -51,6 +65,10 @@ public class AccountController(IUserServices userServices) : Controller
         return this.LocalRedirect(returnUrl ?? "/");
     }
 
+    /// <summary>
+    /// 注销当前用户。
+    /// </summary>
+    /// <returns>重定向到首页</returns>
     [Route("/logout")]
     public async Task<IActionResult> LogOutAsync()
     {
