@@ -55,7 +55,7 @@ builder.Services.AddOutputCache(
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(
-        options =>
+        options => 
         {
             options.LoginPath = "/login/";
             options.LogoutPath = "/logout/";

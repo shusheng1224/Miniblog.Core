@@ -70,7 +70,7 @@ public partial class BlogController(IBlogService blog, IOptionsSnapshot<BlogSett
     /// <param name="category">分类名称</param>
     /// <param name="page">页码</param>
     /// <returns>分类文章视图</returns>
-    [Route("/blog/category/{category}/{page:int?}")]
+    [Route("  /{category}/{page:int?}")]
     [OutputCache(PolicyName = "default")]
     public async Task<IActionResult> Category(string category, int page = 0)
     {
