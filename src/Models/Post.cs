@@ -9,70 +9,70 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 /// <summary>
-/// 博文(Post)类，表示一篇博客文章。
+/// 博文(Post)类，表示一篇博客文章
 /// </summary>
 public partial class Post
 {
     /// <summary>
-    /// 分类列表。
+    /// 分类列表
     /// </summary>
     public IList<string> Categories { get; } = [];
 
     /// <summary>
-    /// 评论列表。
+    /// 评论列表
     /// </summary>
     public IList<Comment> Comments { get; } = [];
 
     /// <summary>
-    /// 文章内容，必填。
+    /// 文章内容，必填
     /// </summary>
     [Required]
     public string Content { get; set; } = string.Empty;
 
     /// <summary>
-    /// 文章摘要，必填。
+    /// 文章摘要，必填
     /// </summary>
     [Required]
     public string Excerpt { get; set; } = string.Empty;
 
     /// <summary>
-    /// 文章唯一ID，必填，默认为当前UTC时间戳。
+    /// 文章唯一ID，必填，默认为当前UTC时间戳
     /// </summary>
     [Required]
     public string ID { get; set; } = DateTime.UtcNow.Ticks.ToString(CultureInfo.InvariantCulture);
 
     /// <summary>
-    /// 是否已发布。
+    /// 是否已发布
     /// </summary>
     public bool IsPublished { get; set; } = true;
     /// <summary>
-    /// 最后修改时间。
+    /// 最后修改时间
     /// </summary>
     public DateTime LastModified { get; set; } = DateTime.UtcNow;
     /// <summary>
-    /// 发布时间。
+    /// 发布时间
     /// </summary>
     public DateTime PubDate { get; set; } = DateTime.UtcNow;
 
     /// <summary>
-    /// 文章短链接Slug，允许为空字符串。
+    /// 文章短链接Slug，允许为空字符串
     /// </summary>
     [DisplayFormat(ConvertEmptyStringToNull = false)]
     public string Slug { get; set; } = string.Empty;
 
     /// <summary>
-    /// 标签列表。
+    /// 标签列表
     /// </summary>
     public IList<string> Tags { get; } = [];
 
     /// <summary>
-    /// 文章标题，必填。
+    /// 文章标题，必填
     /// </summary>
     [Required]
     public string Title { get; set; } = string.Empty;
 
     /// <summary>
-    /// 创建Slug的静态方法，根据标题生成短链接字符串。
+    /// 创建Slug的静态方法，根据标题生成短链接字符串
     /// </summary>
     /// <param name="title">文章标题</param>
     /// <param name="maxLength">最大长度，默认为50</param>
@@ -99,7 +99,7 @@ public partial class Post
     }
 
     /// <summary>
-    /// 判断评论是否开放。
+    /// 判断评论是否开放
     /// </summary>
     /// <param name="commentsCloseAfterDays">评论关闭天数</param>
     /// <returns>是否开放评论</returns>
@@ -107,25 +107,25 @@ public partial class Post
         this.PubDate.AddDays(commentsCloseAfterDays) >= DateTime.UtcNow;
 
     /// <summary>
-    /// 获取已编码的文章链接。
+    /// 获取已编码的文章链接
     /// </summary>
     /// <returns>已编码的URL</returns>
     public string GetEncodedLink() => $"/blog/{System.Net.WebUtility.UrlEncode(this.Slug)}/";
 
     /// <summary>
-    /// 获取文章链接。
+    /// 获取文章链接
     /// </summary>
     /// <returns>文章URL</returns>
     public string GetLink() => $"/blog/{this.Slug}/";
 
     /// <summary>
-    /// 判断文章是否可见（已发布且发布时间早于当前时间）。
+    /// 判断文章是否可见（已发布且发布时间早于当前时间）
     /// </summary>
     /// <returns>是否可见</returns>
     public bool IsVisible() => this.PubDate <= DateTime.UtcNow && this.IsPublished;
 
     /// <summary>
-    /// 渲染文章内容，处理图片懒加载和YouTube嵌入。
+    /// 渲染文章内容，处理图片懒加载和YouTube嵌入
     /// </summary>
     /// <returns>渲染后的内容HTML</returns>
     public string RenderContent()
@@ -148,13 +148,13 @@ public partial class Post
     }
 
     /// <summary>
-    /// 匹配图片标签的正则表达式（用于懒加载）。
+    /// 匹配图片标签的正则表达式（用于懒加载）
     /// </summary>
     [GeneratedRegex("(<img.*?)(src=[\\\"|'])(?<src>.*?)([\\\"|'].*?[/]?>)")]
     private static partial Regex ImageLazyLoadRegex();
 
     /// <summary>
-    /// 移除字符串中的变音符号。
+    /// 移除字符串中的变音符号
     /// </summary>
     /// <param name="text">输入字符串</param>
     /// <returns>移除变音符号后的字符串</returns>
@@ -176,7 +176,7 @@ public partial class Post
     }
 
     /// <summary>
-    /// 移除URL保留字符。
+    /// 移除URL保留字符
     /// </summary>
     /// <param name="text">输入字符串</param>
     /// <returns>移除保留字符后的字符串</returns>
@@ -193,7 +193,7 @@ public partial class Post
     }
 
     /// <summary>
-    /// 匹配YouTube嵌入语法的正则表达式。
+    /// 匹配YouTube嵌入语法的正则表达式
     /// </summary>
     [GeneratedRegex(@"\[youtube:(.*?)\]")]
     private static partial Regex YouTubeEmbedRegex();
