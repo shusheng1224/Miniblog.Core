@@ -9,66 +9,135 @@
 
 @section Head {
     <link rel="stylesheet" href="~/css/admin.scss" />
+    <style>
+        /* 确保表单容器高度足够，并允许滚动 */
+        form#edit {
+            min-height: 80vh;
+            max-width: 900px;
+            margin: auto;
+            overflow-y: auto;
+        }
+
+        /* 标签和输入框间距优化 */
+        label.label {
+            display: block;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            margin-top: 0.2rem;
+            padding: 0.5rem;
+            box-sizing: border-box;
+        }
+
+        .desc {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        input[type=submit] {
+            margin-top: 1rem;
+        }
+    </style>
 }
 
-    <form method="post" id="edit" class="container" asp-controller="Blog" asp-action="UpdatePost">
-        <div asp-validation-summary="All"></div>
-        <input type="hidden" asp-for="@Model.ID" />
+<form method="post" id="edit" class="container" asp-controller="Blog" asp-action="UpdatePost">
+    <div asp-validation-summary="All"></div>
+    <input type="hidden" asp-for="@Model.ID" />
 
-        <label asp-for="@Model.Title" class="label">Title</label>
-        <input asp-for="@Model.Title" required placeholder="Title of blog post" aria-describedby="desc_title" />
-        <span class="desc" id="desc_title">The title as it appears on the website</span>
-        <br />
+    <label asp-for="@Model.Title" class="label">Title</label>
+    <input asp-for="@Model.Title" required placeholder="Title of blog post" aria-describedby="desc_title" />
+    <span class="desc" id="desc_title">The title as it appears on the website</span>
 
-        <label asp-for="@Model.Slug" class="label">Slug</label>
-        <input asp-for="@Model.Slug" maxlength="50" placeholder="The URL name" aria-describedby="desc_slug" />
-        <span class="desc" id="desc_slug">The part of the URL that identifies this blog post</span>
-        <br />
+    <label asp-for="@Model.Slug" class="label">Slug</label>
+    <input asp-for="@Model.Slug" maxlength="50" placeholder="The URL name" aria-describedby="desc_slug" />
+    <span class="desc" id="desc_slug">The part of the URL that identifies this blog post</span>
 
-        <label for="categories" class="label">Categories</label>
-        <input type="text" name="selectcat" id="selectcat" aria-describedby="desc_categories" list="catlist" placeholder="@string.Join(", ", Model.Categories)"  />
-        <input type="text" name="categories" id="categories" value="@string.Join(", ", Model.Categories)" hidden />
-        <span class="desc" id="desc_categories">Select, or build a comma separated list of keywords - to remove double the keyword</span>
-        <datalist id="catlist">
-            @foreach (var cat in allCats)
-            {
-                <option value="@cat"/>
-            }
-            </datalist>
-        <br />
-
-        <label for="tags" class="label">Tags</label>
-        <input type="text" name="selecttag" id="selecttag" aria-describedby="desc_tags" list="taglist" placeholder="@string.Join(", ", Model.Tags)"  />
-        <input type="text" name="tags" id="tags" value="@string.Join(", ", Model.Tags)" hidden />
-        <span class="desc" id="desc_tags">Select, or build a comma separated list of keywords - to remove double the keyword</span>
-        <datalist id="taglist">
-            @foreach (var tag in allTags)
-            {
-                <option value="@tag"/>
-            }
-            </datalist>
-        <br />
-
-        <label asp-for="@Model.Excerpt" class="label">Excerpt</label>
-        <textarea asp-for="@Model.Excerpt" rows="3" placeholder="Short description of blog post" aria-describedby="desc_excerpt">@Model.Excerpt</textarea>
-        <span class="desc" id="desc_excerpt">A brief description of the content of the post</span>
-        <br />
-
-        <textarea asp-for="@Model.Content" rows="20" aria-label="Content">@Model.Content</textarea>
-        <br />
-
-        <input type="submit" value="Save" title="Save the post" />
-
-        <input asp-for="@Model.IsPublished" />
-        <label asp-for="@Model.IsPublished">Is published</label>
-
-        @if (!isNew)
+    <label for="categories" class="label">Categories</label>
+    <input type="text" name="selectcat" id="selectcat" aria-describedby="desc_categories" list="catlist" placeholder="@string.Join(", ", Model.Categories)" />
+    <input type="text" name="categories" id="categories" value="@string.Join(", ", Model.Categories)" hidden />
+    <span class="desc" id="desc_categories">Select, or build a comma separated list of keywords - to remove double the keyword</span>
+    <datalist id="catlist">
+        @foreach (var cat in allCats)
         {
-            <input type="submit" value="Delete..." class="delete" title="Delete the post..." asp-action="DeletePost" asp-route-id="@Model.ID" />
+            <option value="@cat" />
         }
-    </form>
+    </datalist>
+
+    <label for="tags" class="label">Tags</label>
+    <input type="text" name="selecttag" id="selecttag" aria-describedby="desc_tags" list="taglist" placeholder="@string.Join(", ", Model.Tags)" />
+    <input type="text" name="tags" id="tags" value="@string.Join(", ", Model.Tags)" hidden />
+    <span class="desc" id="desc_tags">Select, or build a comma separated list of keywords - to remove double the keyword</span>
+    <datalist id="taglist">
+        @foreach (var tag in allTags)
+        {
+            <option value="@tag" />
+        }
+    </datalist>
+
+    <label asp-for="@Model.Excerpt" class="label">Excerpt</label>
+    <textarea asp-for="@Model.Excerpt" rows="3" placeholder="Short description of blog post" aria-describedby="desc_excerpt">@Model.Excerpt</textarea>
+    <span class="desc" id="desc_excerpt">A brief description of the content of the post</span>
+
+    <label asp-for="@Model.Content" class="label">Content</label>
+    <textarea asp-for="@Model.Content" id="Content" rows="20" aria-label="Content">@Model.Content</textarea>
+
+    <input type="submit" value="Save" title="Save the post" />
+
+    <input asp-for="@Model.IsPublished" />
+    <label asp-for="@Model.IsPublished">Is published</label>
+
+    @if (!isNew)
+    {
+        <input type="submit" value="Delete..." class="delete" title="Delete the post..." asp-action="DeletePost" asp-route-id="@Model.ID" />
+    }
+</form>
 
 @section Scripts {
-    <script src="//@host/lib/tinymce/tinymce.min.js"></script> @*with enabled CDN tinymce is not able to find some files*@
+    <script src="https://cdn.tiny.cloud/1/42qzh5f5im75a65pa0mk17psm1m2zv57v6s5o20js5v0st8y/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#Content',
+            height: window.innerHeight - 250, // 自适应高度
+            menubar: true,
+            resize: true,
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount'
+            ],
+            toolbar:
+                'undo redo | formatselect | bold italic backcolor | \
+                alignleft aligncenter alignright alignjustify | \
+                bullist numlist outdent indent | removeformat | help | image link | fullscreen',
+            content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+            images_upload_url: '/Blog/UploadFile',
+            automatic_uploads: true,
+            image_caption: true,
+            file_picker_types: 'image',
+            file_picker_callback: function (callback, value, meta) {
+                var input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', 'image/*');
+                input.onchange = function () {
+                    var file = this.files[0];
+                    var reader = new FileReader();
+                    reader.onload = function () {
+                        var id = 'blobid' + (new Date()).getTime();
+                        var blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                        var base64 = reader.result.split(',')[1];
+                        var blobInfo = blobCache.create(id, file, base64);
+                        blobCache.add(blobInfo);
+                        callback(blobInfo.blobUri(), { title: file.name });
+                    };
+                    reader.readAsDataURL(file);
+                };
+                input.click();
+            }
+        });
+    </script>
+
     <script src="~/js/admin.js" async></script>
 }
