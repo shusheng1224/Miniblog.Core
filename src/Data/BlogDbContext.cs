@@ -9,13 +9,13 @@ namespace Miniblog.Core.Data
 {
     public class BlogDbContext : DbContext
     {
-        public BlogDbContext(DbContextOptions<BlogDbContext> options)
-            : base(options)
-        {
-        }
+        public BlogDbContext(DbContextOptions<BlogDbContext> options): base(options){}
 
         public DbSet<Post> Posts { get; set; } = default!;
         public DbSet<Comment> Comments { get; set; } = default!;
+
+        public DbSet<PostCategory> PostCategories { get; set; }
+        public DbSet<PostTag> PostTags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,5 +27,20 @@ namespace Miniblog.Core.Data
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
         }
+    }
+    public class PostCategory
+    {
+        public int Id { get; set; } // 主键
+        public required string PostId { get; set; }
+        public required Post Post { get; set; }
+        public required string Category { get; set; }
+    }
+
+    public class PostTag
+    {
+        public int Id { get; set; } // 主键
+        public required string PostId { get; set; }
+        public required Post Post { get; set; }
+        public required string Tag { get; set; }
     }
 }

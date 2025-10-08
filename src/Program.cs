@@ -4,9 +4,11 @@ using JavaScriptEngineSwitcher.V8;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Rewrite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 using Miniblog.Core;
+using Miniblog.Core.Data;
 using Miniblog.Core.Services;
 
 using System.IO.Compression;
@@ -27,8 +29,11 @@ builder.WebHost.ConfigureKestrel(options => options.AddServerHeader = false);
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+builder.Services.AddDbContext<BlogDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("MiniblogCoreContext")));
+
 builder.Services.AddSingleton<IUserServices, BlogUserServices>();
-builder.Services.AddSingleton<IBlogService, FileBlogService>();
+builder.Services.AddScoped<IBlogService, EfBlogService>();
 builder.Services.Configure<BlogSettings>(builder.Configuration.GetSection("blog"));
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddMetaWeblog<MetaWeblogService>();
